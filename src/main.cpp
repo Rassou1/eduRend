@@ -21,7 +21,6 @@
 #include "Window.h"
 #include "InputHandler.h"
 #include "Camera.h"
-#include "cube.h"
 #include "Model.h"
 #include "Scene.h"
 
