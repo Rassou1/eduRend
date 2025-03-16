@@ -21,10 +21,17 @@ mat4f Camera::WorldToViewMatrix() const noexcept
 	//		inverse(T(p)*R) = inverse(R)*inverse(T(p)) = transpose(R)*T(-p)
 	// Since now there is no rotation, this matrix is simply T(-p)
 
-	return mat4f::translation(-m_position);
+
+
+	return m_rotation * mat4f::translation(-m_position);
 }
 
 mat4f Camera::ProjectionMatrix() const noexcept
 {
 	return mat4f::projection(m_vertical_fov, m_aspect_ratio, m_near_plane, m_far_plane);
+}
+
+void Camera::RotationMatrix(long dx, long dy) 
+{
+	m_rotation = mat4f::rotation(0, dx * 0.01f , dy * 0.01f);
 }
