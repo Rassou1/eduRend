@@ -81,7 +81,7 @@ private:
 	float yaw = 0;
 	float pitch = 0;
 
-	linalg::vec4f fwd = (0, 0, -1, 1);
+	linalg::vec4f fwd = (0, 0, 1, 1);
 	linalg::vec4f position4;
 
 	linalg::vec3f m_position;

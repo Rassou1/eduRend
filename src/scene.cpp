@@ -114,21 +114,22 @@ void OurTestScene::Update(
 	m_sun_transform = 
 		mat4f::translation(0, 0, 0) *
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *
-		mat4f::scaling(1.5);
+		mat4f::scaling(1);
 
 	m_earth_transform = 
 		m_sun_transform * 
-		mat4f::rotation(earthOrbitLocation, 0, 1, 0) *
 		mat4f::translation(0, 0, 1) *		
+		mat4f::rotation(earthOrbitLocation, 0, 1, 0)*
 		mat4f::rotation(earthRotationLocation, 0.0f, 1.0f, 0.0f) *	
-		mat4f::scaling(0.75);
+		mat4f::scaling(0.5);
 
 	m_moon_transform = 
 		m_earth_transform * 
-		mat4f::rotation(moonOrbitLocation, 0.0f, 1.0f, 0.0f) *
+		
 		mat4f::translation(1, 0, 0) *			
+		mat4f::rotation(moonOrbitLocation, 0.0f, 1.0f, 0.0f)*
 		mat4f::rotation(moonRotationLocation, 0.0f, 1, 0.0f) *
-		mat4f::scaling(0.5);
+		mat4f::scaling(0.25);
 
 	// Increment the rotation angle.
 	m_angle += m_angular_velocity * dt;
