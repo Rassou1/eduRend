@@ -52,6 +52,10 @@ void OurTestScene::Init()
 	m_quad = new QuadModel(m_dxdevice, m_dxdevice_context);
 	m_sponza = new OBJModel("assets/crytek-sponza/sponza.obj", m_dxdevice, m_dxdevice_context);
 	m_cube = new Cube(m_dxdevice, m_dxdevice_context);
+
+	m_sun = new Cube(m_dxdevice, m_dxdevice_context);
+	m_earth = new Cube(m_dxdevice, m_dxdevice_context);
+	m_moon = new Cube(m_dxdevice, m_dxdevice_context);
 }
 
 //
@@ -63,8 +67,9 @@ void OurTestScene::Update(
 	const InputHandler& input_handler)
 {
 	// Basic camera control
-	if (input_handler.IsKeyPressed(Keys::Up) || input_handler.IsKeyPressed(Keys::W))
-		m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt });
+	if (input_handler.IsKeyPressed(Keys::Up) || input_handler.IsKeyPressed(Keys::W)) { m_camera->MoveForward(); }
+		
+		//m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt });
 	if (input_handler.IsKeyPressed(Keys::Down) || input_handler.IsKeyPressed(Keys::S))
 		m_camera->Move({ 0.0f, 0.0f, m_camera_velocity * dt });
 	if (input_handler.IsKeyPressed(Keys::Right) || input_handler.IsKeyPressed(Keys::D))
@@ -93,6 +98,37 @@ void OurTestScene::Update(
 	m_sponza_transform = mat4f::translation(0, -5, 0) *		 // Move down 5 units
 		mat4f::rotation(fPI / 2, 0.0f, 1.0f, 0.0f) * // Rotate pi/2 radians (90 degrees) around y
 		mat4f::scaling(0.05f);						 // The scene is quite large so scale it down to 5%
+
+	earthOrbitDistance = 1.5f * dt;
+	moonOrbitDistance = 1.5f * dt;
+
+	earthRotation = 3.0f * dt;
+	moonRotation = 3.0f * dt;
+
+	earthOrbitLocation += earthOrbitDistance;
+	moonOrbitLocation += moonOrbitDistance;
+
+	earthRotationLocation += earthRotation;
+	moonRotationLocation += moonRotation;
+
+	m_sun_transform = 
+		mat4f::translation(0, 0, 0) *
+		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *
+		mat4f::scaling(1.5);
+
+	m_earth_transform = 
+		m_sun_transform * 
+		mat4f::rotation(earthOrbitLocation, 0, 1, 0) *
+		mat4f::translation(0, 0, 1) *		
+		mat4f::rotation(earthRotationLocation, 0.0f, 1.0f, 0.0f) *	
+		mat4f::scaling(0.75);
+
+	m_moon_transform = 
+		m_earth_transform * 
+		mat4f::rotation(moonOrbitLocation, 0.0f, 1.0f, 0.0f) *
+		mat4f::translation(1, 0, 0) *			
+		mat4f::rotation(moonRotationLocation, 0.0f, 1, 0.0f) *
+		mat4f::scaling(0.5);
 
 	// Increment the rotation angle.
 	m_angle += m_angular_velocity * dt;
@@ -123,9 +159,18 @@ void OurTestScene::Render()
 	/*UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	m_quad->Render();*/
 
-	// Load matrices + the Cube's transformation to the device and render it
-	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
-	m_cube->Render();
+	//// Load matrices + the Cube's transformation to the device and render it
+	//UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
+	//m_cube->Render();
+
+	UpdateTransformationBuffer(m_sun_transform, m_view_matrix, m_projection_matrix);
+	m_sun->Render();
+
+	UpdateTransformationBuffer(m_earth_transform, m_view_matrix, m_projection_matrix);
+	m_earth->Render();
+
+	UpdateTransformationBuffer(m_moon_transform, m_view_matrix, m_projection_matrix);
+	m_moon->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);

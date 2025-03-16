@@ -38,6 +38,8 @@ public:
 	*/
 	void Move(const linalg::vec3f& direction) noexcept;
 
+	void MoveForward() noexcept;
+
 	/**
 	 * @brief Changes the camera aspect ratio.
 	 * @param[in] aspect_ratio New aspect ratio, calculate with width / height
@@ -50,6 +52,8 @@ public:
 	*/
 	linalg::mat4f WorldToViewMatrix() const noexcept;
 
+	linalg::mat4f ViewToWorldMatrix() const noexcept;
+
 	/**
 	 * @brief get the Matrix transforming from View space to Clip space
 	 * @return Projection matrix.
@@ -58,7 +62,7 @@ public:
 	*/
 	linalg::mat4f ProjectionMatrix() const noexcept;
 
-	void RotationMatrix(long dx, long dy);
+	void RotationMatrix(long dx, long dy) noexcept;
 
 private:
 	// Aperture attributes
@@ -74,8 +78,15 @@ private:
 	float m_near_plane;
 	float m_far_plane;
 
+	float yaw = 0;
+	float pitch = 0;
+
+	linalg::vec4f fwd = (0, 5, 0, 0);
+	linalg::vec4f position4;
+
 	linalg::vec3f m_position;
 	linalg::mat4f m_rotation;
+	
 };
 
 #endif
