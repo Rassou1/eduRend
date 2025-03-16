@@ -16,7 +16,7 @@ void Camera::Move(const vec3f& direction) noexcept
 void Camera::MoveForward() noexcept
 {
 	position4 = (m_position, 0);
-	position4 += WorldToViewMatrix() * fwd;
+	position4 += ViewToWorldMatrix() * fwd;
 	m_position = (position4.x, position4.y, position4.z);
 }
 
@@ -30,7 +30,10 @@ mat4f Camera::WorldToViewMatrix() const noexcept
 	// Since now there is no rotation, this matrix is simply T(-p)
 
 
-	//Constantly goes back to the original angle
+
+	//TRANSPOSE THE ROTATION SOMEHOW
+	//TRANSPOSING JUST INVERTED ALL THE CONTROLS
+	//CAM TURNS UPSIDE DOWN IF LOOKING BACKWARDS. FIGURE OUT WHY AND FIX!!
 	return m_rotation * mat4f::translation(-m_position);
 }
 
@@ -48,7 +51,7 @@ void Camera::RotationMatrix(long dx, long dy) noexcept
 {
 	yaw += dx * 0.002f;
 	pitch += dy * 0.002f;
-
+	
 	m_rotation = mat4f::rotation(0, yaw, pitch);
 }
 
