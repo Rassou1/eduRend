@@ -1,6 +1,12 @@
 
 Texture2D texDiffuse : register(t0);
 
+cbuffer LightCamBuffer : register(b0)
+{
+    float4 cameraPosition;
+    float4 lightPosition;
+};
+
 struct PSIn
 {
 	float4 Pos  : SV_Position;
@@ -20,4 +26,6 @@ float4 PS_main(PSIn input) : SV_Target
 	
 	// Debug shading #2: map and return texture coordinates as a color (blue = 0)
 //	return float4(input.TexCoord, 0, 1);
+	
+	
 }

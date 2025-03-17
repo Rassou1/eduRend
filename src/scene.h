@@ -80,6 +80,8 @@ class OurTestScene : public Scene
 	ID3D11Buffer* m_transformation_buffer = nullptr;
 	// + other CBuffers
 
+	ID3D11Buffer* m_lightCam_buffer = nullptr;
+
 	//
 	// Scene content
 	//
@@ -122,9 +124,16 @@ class OurTestScene : public Scene
 	float m_camera_velocity = 5.0f;	// Camera movement velocity in units/s
 	float m_fps_cooldown = 0;
 
+	linalg::vec3f testValue = (0, 0, 0);
+	linalg::vec3f testValue2 = (0, 2, 0);
+
 	void InitTransformationBuffer();
 
 	void UpdateTransformationBuffer(mat4f model_to_world_matrix, mat4f world_to_view_matrix, mat4f projection_matrix);
+
+	void InitLightCamBuffer();
+
+	void UpdateLightCamBuffer(vec3f& cameraPosition, const vec3f lightPosition);
 
 public:
 	/**

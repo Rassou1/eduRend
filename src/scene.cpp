@@ -32,6 +32,7 @@ OurTestScene::OurTestScene(
 { 
 	InitTransformationBuffer();
 	// + init other CBuffers
+	InitLightCamBuffer();
 }
 
 //
@@ -67,9 +68,8 @@ void OurTestScene::Update(
 	const InputHandler& input_handler)
 {
 	// Basic camera control
-	if (input_handler.IsKeyPressed(Keys::Up) || input_handler.IsKeyPressed(Keys::W)) { m_camera->MoveForward(); }
-		
-		//m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt });
+	if (input_handler.IsKeyPressed(Keys::Up) || input_handler.IsKeyPressed(Keys::W))
+		m_camera->Move({ 0.0f, 0.0f, -m_camera_velocity * dt });
 	if (input_handler.IsKeyPressed(Keys::Down) || input_handler.IsKeyPressed(Keys::S))
 		m_camera->Move({ 0.0f, 0.0f, m_camera_velocity * dt });
 	if (input_handler.IsKeyPressed(Keys::Right) || input_handler.IsKeyPressed(Keys::D))
@@ -151,6 +151,8 @@ void OurTestScene::Render()
 {
 	// Bind transformation_buffer to slot b0 of the VS
 	m_dxdevice_context->VSSetConstantBuffers(0, 1, &m_transformation_buffer);
+	m_dxdevice_context->PSSetConstantBuffers(0, 1, &m_lightCam_buffer);
+
 
 	// Obtain the matrices needed for rendering from the camera
 	m_view_matrix = m_camera->WorldToViewMatrix();
@@ -163,6 +165,8 @@ void OurTestScene::Render()
 	//// Load matrices + the Cube's transformation to the device and render it
 	//UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	//m_cube->Render();
+
+	UpdateLightCamBuffer(testValue/*m_camera->GetPosition()*/, testValue2);
 
 	UpdateTransformationBuffer(m_sun_transform, m_view_matrix, m_projection_matrix);
 	m_sun->Render();
@@ -226,4 +230,31 @@ void OurTestScene::UpdateTransformationBuffer(
 	matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;
 	matrixBuffer->ProjectionMatrix = ProjectionMatrix;
 	m_dxdevice_context->Unmap(m_transformation_buffer, 0);
+
 }
+
+void OurTestScene::InitLightCamBuffer() 
+{
+	HRESULT hr;
+	D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(LightCamBuffer);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_lightCam_buffer));
+}
+
+void OurTestScene::UpdateLightCamBuffer(vec3f& cameraPosition, const vec3f lightPosition)
+{
+	D3D11_MAPPED_SUBRESOURCE resource;
+	m_dxdevice_context->Map(m_lightCam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	LightCamBuffer* lightCamBuffer = (LightCamBuffer*)resource.pData;
+	lightCamBuffer->CameraPosition = vec4f(cameraPosition, 1.0f);
+	lightCamBuffer->LightPosition = vec4f(lightPosition, 1.0f);
+	m_dxdevice_context->Unmap(m_lightCam_buffer, 0);
+}
+
+// COPY THE TRANSOFRMATION BUFFER STUFF TO MAKE MY OWN CAMERA BUFFER
+// ALSO MAKE SOME SHI IN THE PIXELSHADER.HLSL

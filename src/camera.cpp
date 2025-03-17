@@ -10,14 +10,13 @@ void Camera::MoveTo(const vec3f& position) noexcept
 
 void Camera::Move(const vec3f& direction) noexcept
 {
-	m_position += direction;
-}
+ fwd = { -sin(yaw), 0, cos(yaw) };
+ right = { cos(yaw), 0, sin(yaw) };
+vec3f up = (0, 1, 0);
 
-void Camera::MoveForward() noexcept
-{
-	position4 = (m_position, 0);
-	position4 += ViewToWorldMatrix() * fwd;
-	m_position = (position4.x, position4.y, position4.z);
+	m_position += right * direction.x;
+	m_position += fwd * direction.z;
+	m_position += up * direction.y;
 }
 
 mat4f Camera::WorldToViewMatrix() const noexcept
@@ -28,9 +27,7 @@ mat4f Camera::WorldToViewMatrix() const noexcept
 	// World-to-View then is the inverse of T(p)*R;
 	//		inverse(T(p)*R) = inverse(R)*inverse(T(p)) = transpose(R)*T(-p)
 	// Since now there is no rotation, this matrix is simply T(-p)
-
-
-
+	
 	//Fixed, now works as intended.
 	return  (mat4f::translation(m_position) * m_rotation).inverse();//m_rotation * mat4f::translation(-m_position);
 }
@@ -51,5 +48,10 @@ void Camera::RotationMatrix(long dx, long dy) noexcept
 	pitch += dy * 0.002f;
 	
 	m_rotation = mat4f::rotation(0, -yaw, -pitch);
+}
+
+linalg::vec3f& Camera::GetPosition()
+{
+	return m_position;
 }
 

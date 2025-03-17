@@ -38,7 +38,6 @@ public:
 	*/
 	void Move(const linalg::vec3f& direction) noexcept;
 
-	void MoveForward() noexcept;
 
 	/**
 	 * @brief Changes the camera aspect ratio.
@@ -64,6 +63,8 @@ public:
 
 	void RotationMatrix(long dx, long dy) noexcept;
 
+	linalg::vec3f& GetPosition();
+
 private:
 	// Aperture attributes
 	float m_vertical_fov;
@@ -81,8 +82,10 @@ private:
 	float yaw = 0;
 	float pitch = 0;
 
-	linalg::vec4f fwd = (0, 0, 1.0f, 1.0f);
-	linalg::vec4f position4;
+	float speed = 0.1f;
+
+	linalg::vec3f fwd;
+	linalg::vec3f right;
 
 	linalg::vec3f m_position;
 	linalg::mat4f m_rotation;

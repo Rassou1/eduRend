@@ -6,6 +6,8 @@ cbuffer TransformationBuffer : register(b0)
 	matrix ProjectionMatrix;
 };
 
+
+
 struct VSIn
 {
 	float3 Pos : POSITION;
