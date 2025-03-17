@@ -31,10 +31,8 @@ mat4f Camera::WorldToViewMatrix() const noexcept
 
 
 
-	//TRANSPOSE THE ROTATION SOMEHOW
-	//TRANSPOSING JUST INVERTED ALL THE CONTROLS
-	//CAM TURNS UPSIDE DOWN IF LOOKING BACKWARDS. FIGURE OUT WHY AND FIX!!
-	return m_rotation * mat4f::translation(-m_position);
+	//Fixed, now works as intended.
+	return  (mat4f::translation(m_position) * m_rotation).inverse();//m_rotation * mat4f::translation(-m_position);
 }
 
 linalg::mat4f Camera::ViewToWorldMatrix() const noexcept
@@ -52,6 +50,6 @@ void Camera::RotationMatrix(long dx, long dy) noexcept
 	yaw += dx * 0.002f;
 	pitch += dy * 0.002f;
 	
-	m_rotation = mat4f::rotation(0, yaw, pitch);
+	m_rotation = mat4f::rotation(0, -yaw, -pitch);
 }
 
