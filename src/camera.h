@@ -65,6 +65,8 @@ public:
 
 	linalg::vec3f& GetPosition();
 
+	linalg::vec3f& GetForward();
+
 private:
 	// Aperture attributes
 	float m_vertical_fov;
@@ -84,7 +86,7 @@ private:
 
 	float speed = 0.1f;
 
-	linalg::vec3f fwd;
+	linalg::vec3f fwd = (0, 0, 1);
 	linalg::vec3f right;
 
 	linalg::vec3f m_position;

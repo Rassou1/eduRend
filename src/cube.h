@@ -11,6 +11,12 @@ public:
 	virtual void Render() const;
 
 	~Cube() { };
+
+	Material material;
+
+	float material_Shininess = 0.5;
+
+	
 	
 };
 

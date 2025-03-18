@@ -254,6 +254,10 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	SETNAME(m_index_buffer, "IndexBuffer");
 
 	m_number_of_indices = (unsigned int)indices.size();
+
+	material.DiffuseColour = vec3f(0.5, 0, 0);
+	material.AmbientColour = vec3f(0, 0, 0.5);
+
 }
 
 void Cube::Render() const
@@ -265,6 +269,20 @@ void Cube::Render() const
 
 	// Bind our index buffer
 	m_dxdevice_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+	//material buffer
+	MaterialBuffer mb;
+	mb.AmbientClr = vec4f(material.AmbientColour, 1.0f);
+	mb.DiffuseClr = vec4f(material.DiffuseColour, 1.0f);
+	mb.SpecularClr = vec4f(material.SpecularColour, material_Shininess);
+
+	D3D11_MAPPED_SUBRESOURCE mapped;
+	m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	memcpy(mapped.pData, &mb, sizeof(MaterialBuffer));
+	m_dxdevice_context->Unmap(m_material_buffer, 0);
+
+	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
+
 
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);

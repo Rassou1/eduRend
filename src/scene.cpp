@@ -151,6 +151,8 @@ void OurTestScene::Render()
 {
 	// Bind transformation_buffer to slot b0 of the VS
 	m_dxdevice_context->VSSetConstantBuffers(0, 1, &m_transformation_buffer);
+
+	//Same with the lightcambuffer to the PS
 	m_dxdevice_context->PSSetConstantBuffers(0, 1, &m_lightCam_buffer);
 
 
@@ -166,7 +168,7 @@ void OurTestScene::Render()
 	//UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	//m_cube->Render();
 
-	UpdateLightCamBuffer(testValue/*m_camera->GetPosition()*/, testValue2);
+	UpdateLightCamBuffer(m_camera->GetPosition(), m_camera->GetForward());
 
 	UpdateTransformationBuffer(m_sun_transform, m_view_matrix, m_projection_matrix);
 	m_sun->Render();
@@ -192,6 +194,7 @@ void OurTestScene::Release()
 
 	SAFE_RELEASE(m_transformation_buffer);
 	// + release other CBuffers
+	SAFE_RELEASE(m_lightCam_buffer);
 }
 
 void OurTestScene::OnWindowResized(
@@ -248,6 +251,7 @@ void OurTestScene::InitLightCamBuffer()
 
 void OurTestScene::UpdateLightCamBuffer(vec3f& cameraPosition, const vec3f lightPosition)
 {
+	//MAYBE EXTEND TO TAKE AN ANGLE TOO????
 	D3D11_MAPPED_SUBRESOURCE resource;
 	m_dxdevice_context->Map(m_lightCam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	LightCamBuffer* lightCamBuffer = (LightCamBuffer*)resource.pData;
@@ -255,6 +259,3 @@ void OurTestScene::UpdateLightCamBuffer(vec3f& cameraPosition, const vec3f light
 	lightCamBuffer->LightPosition = vec4f(lightPosition, 1.0f);
 	m_dxdevice_context->Unmap(m_lightCam_buffer, 0);
 }
-
-// COPY THE TRANSOFRMATION BUFFER STUFF TO MAKE MY OWN CAMERA BUFFER
-// ALSO MAKE SOME SHI IN THE PIXELSHADER.HLSL

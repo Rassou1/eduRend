@@ -23,6 +23,13 @@ struct LightCamBuffer
 	vec4f LightPosition;
 };
 
+struct MaterialBuffer 
+{
+	vec4f AmbientClr;
+	vec4f DiffuseClr;
+	vec4f SpecularClr;
+};
+
 struct PhongComponentBuffer 
 {
 

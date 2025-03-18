@@ -12,7 +12,7 @@ void Camera::Move(const vec3f& direction) noexcept
 {
  fwd = { -sin(yaw), 0, cos(yaw) };
  right = { cos(yaw), 0, sin(yaw) };
-vec3f up = (0, 1, 0);
+ vec3f up = (0, 1, 0);
 
 	m_position += right * direction.x;
 	m_position += fwd * direction.z;
@@ -55,3 +55,7 @@ linalg::vec3f& Camera::GetPosition()
 	return m_position;
 }
 
+linalg::vec3f& Camera::GetForward()
+{
+	return fwd;
+}
