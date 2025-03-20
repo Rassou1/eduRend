@@ -57,6 +57,8 @@ void OurTestScene::Init()
 	m_sun = new Cube(m_dxdevice, m_dxdevice_context);
 	m_earth = new Cube(m_dxdevice, m_dxdevice_context);
 	m_moon = new Cube(m_dxdevice, m_dxdevice_context);
+
+
 }
 
 //

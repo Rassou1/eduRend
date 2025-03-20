@@ -17,6 +17,8 @@ cbuffer MaterialBuffer : register(b1)
 struct PSIn
 {
 	float4 Pos  : SV_Position;
+    float3 WorldPos : POSITION_WORLD;
+    float3 WorldNormal : NORMAL_WORLD;
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEX;
 };
@@ -36,21 +38,33 @@ float4 PS_main(PSIn input) : SV_Target
 	
 	//MAYBE EXTEND THE BUFFER TO HAVE LIGHT POSITION AND ANGLE???
    
+    //Normal of surface.
+    float3 inputNormal = input.WorldNormal;
     
+    //Normal of light source.
+    float3 lightNormal = (lightPosition.xyz - input.WorldPos);
+    
+    //Ambient term of surface material.
     float3 ambient = ambientClr.xyz;
     
+    //Diffuse term of the surface material.
+    //Changed this a bit and it changed how colors look a LOT. maybe it isn't a good idea
+    float diffuseIntensity = max(dot(inputNormal, lightNormal), 0.0f);
+    float3 diffuse = diffuseClr.xyz * diffuseIntensity;
+    
+    //Normals to be used in the specular calculation.
+    float3 cameraNormal = normalize(cameraPosition.xyz - input.WorldPos);
+    float3 reflectedRay = reflect(-lightNormal, cameraNormal);
+    
+    //Specular term of the surface material.
+    //Shininess was stored in the w value of a vec4 earlier. Now it is a float3 and a float.
     float shininess = specularClr.w;
-    float3 specular = specularClr.xyz * shininess;
+    float specularIntensity = pow(max(0, dot(reflectedRay, cameraNormal)), shininess);
+    float3 specular = specularClr.xyz * specularIntensity;	
     
 	
-    float3 omniLight = float3(lightPosition.x, lightPosition.y, lightPosition.z);
-	
-    //Changed this a bit and it changed how colors look a LOT. maybe it isn't a good idea
-    float diffuseIntensity = max(0, dot(input.Normal, omniLight));
-    float3 diffuse = diffuseClr.xyz * diffuseIntensity;
-	
     //CALCULATIONS APPLY TO EVERY SINGLE OBJECT. FIGURE OUT HOW TO MAKE THEM ONLY WORK ON ONE (1) THING AT A TIME
-    float3 finalColor = diffuse + ambient; //+ specular;
+    float3 finalColor = diffuse; //+ ambient; + specular;
     return float4(finalColor, 1);
 	
 }
