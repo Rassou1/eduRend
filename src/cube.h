@@ -12,7 +12,7 @@ public:
 
 	~Cube() { };
 
-	Material cube_material;
+	Material material;
 
 	float material_Shininess = 0.5;
 

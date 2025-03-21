@@ -64,7 +64,7 @@ public:
 	*/
 	virtual void Render() const = 0;
 
-	virtual void SetMaterial(vec3f diffuse, vec3f ambient, vec3f specular, float shininess);
+
 	/**
 	 * @brief Destructor.
 	 * @details Releases the vertex and index buffers of the Model.

@@ -255,8 +255,8 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 
 	m_number_of_indices = (unsigned int)indices.size();
 
-	cube_material.DiffuseColour = vec3f(0.5, 0, 0);
-	cube_material.AmbientColour = vec3f(0, 0, 0.5);
+	material.DiffuseColour = vec3f(0.5, 0, 0);
+	material.AmbientColour = vec3f(0, 0, 0.5);
 
 }
 
@@ -272,9 +272,9 @@ void Cube::Render() const
 
 	//material buffer
 	MaterialBuffer mb;
-	mb.AmbientClr = vec4f(cube_material.AmbientColour, 1.0f);
-	mb.DiffuseClr = vec4f(cube_material.DiffuseColour, 1.0f);
-	mb.SpecularClr = vec4f(cube_material.SpecularColour, material_Shininess);
+	mb.AmbientClr = vec4f(material.AmbientColour, 1.0f);
+	mb.DiffuseClr = vec4f(material.DiffuseColour, 1.0f);
+	mb.SpecularClr = vec4f(material.SpecularColour, material_Shininess);
 
 	D3D11_MAPPED_SUBRESOURCE mapped;
 	m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
@@ -286,9 +286,4 @@ void Cube::Render() const
 
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);
-}
-
-void Model::SetMaterial(vec3f diffuse, vec3f ambient, vec3f specular, float shininess) 
-{
-	
 }
