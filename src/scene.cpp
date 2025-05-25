@@ -52,6 +52,10 @@ void OurTestScene::Init()
 	m_quad = new QuadModel(m_dxdevice, m_dxdevice_context);
 	m_cube = new Cube(m_dxdevice, m_dxdevice_context);
 	m_sponza = new OBJModel("assets/crytek-sponza/sponza.obj", m_dxdevice, m_dxdevice_context);
+
+	orbitingCube = new Cube(m_dxdevice, m_dxdevice_context);
+	orbitingCube2 = new Cube(m_dxdevice, m_dxdevice_context);
+
 }
 
 //
@@ -78,6 +82,8 @@ void OurTestScene::Update(
 	if(input_handler.IsKeyPressed(Keys::Esc))
 		PostQuitMessage(0);
 
+	m_camera->UpdateRotation(input_handler.GetMouseDeltaX(), input_handler.GetMouseDeltaY());
+
 	// Now set/update object transformations
 	// This can be done using any sequence of transformation matrices,
 	// but the T*R*S order is most common; i.e. scale, then rotate, and then translate.
@@ -97,6 +103,16 @@ void OurTestScene::Update(
 	m_cube_transform = mat4f::translation(0, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 		mat4f::scaling(1, 1, 1);
+
+	orbitingCubeTransform = m_cube_transform *
+		mat4f::translation(3, 0, 0) *			// No translation
+		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+		mat4f::scaling(0.5, 0.5, 0.5);
+
+	orbitingCubeTransform2 = orbitingCubeTransform *
+		mat4f::translation(3, 0, 0) *
+		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+		mat4f::scaling(0.25, 0.25, 0.25);
 
 	// Increment the rotation angle.
 	m_angle += m_angular_velocity * dt;
@@ -129,6 +145,12 @@ void OurTestScene::Render()
 
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	m_cube->Render();
+	
+	UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
+	orbitingCube->Render();
+	
+	UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
+	orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
