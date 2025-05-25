@@ -58,9 +58,9 @@ void OurTestScene::Init()
 	orbitingCube = new Cube(m_dxdevice, m_dxdevice_context);
 	orbitingCube2 = new Cube(m_dxdevice, m_dxdevice_context);
 
-	orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
+	//orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
 
-	SetSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_MIRROR);
+	SetSampler(D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
 
 }
 
@@ -113,15 +113,21 @@ void OurTestScene::Update(
 	orbitingCubeTransform = m_cube_transform *
 		mat4f::translation(3, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(0.5, 0.5, 0.5);
+		mat4f::scaling(1, 1, 1);
 
-	orbitingCubeTransform2 = orbitingCubeTransform *
-		mat4f::translation(3, 0, 0) *
+	//orbitingCubeTransform2 = orbitingCubeTransform *
+	//	mat4f::translation(3, 0, 0) *
+	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+	//	mat4f::scaling(0.25, 0.25, 0.25);
+
+	orbitingCubeTransform2 =
+		mat4f::translation(-3, 0, 0) *
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(0.25, 0.25, 0.25);
+		mat4f::scaling(1, 1, 1);
+
 
 	// Increment the rotation angle.
-	m_angle += m_angular_velocity * dt;
+	//m_angle += m_angular_velocity * dt;
 
 	// Print fps
 	m_fps_cooldown -= dt;
@@ -168,7 +174,7 @@ void OurTestScene::Render()
 	UpdateMaterialBuffer(m_sponza->material, 1.0f);
 	m_sponza->Render();
 
-	UpdateLightCamBuffer(vec4f(0, 0, 1, 0), vec4f(m_camera->m_position, 0));
+	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f));
 }
 
 void OurTestScene::Release()

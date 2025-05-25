@@ -32,6 +32,7 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
+    input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
    
     float3 N = normalize(input.Normal);
@@ -39,13 +40,13 @@ float4 PS_main(PSIn input) : SV_Target
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);
     
-    float3 ambientTerm = ambient.xyz;
+    float3 ambientTerm = ambient.xyz * textureColor.xyz;
     float diff = max(dot(L, N), 0.0f);
     float3 diffuseTerm = diffuse.xyz * diff;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.xyz;
+    float3 specularTerm = specular.xyz * spec * lightPos.w;
     
-    float3 finalColor = (ambientTerm + diffuseTerm) * textureColor.xyz + specularTerm;
+    float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
     return float4(finalColor, 1.0f);
 	
 	

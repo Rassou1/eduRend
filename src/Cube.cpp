@@ -253,7 +253,16 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	dxdevice->CreateBuffer(&indexbufferDesc, &indexData, &m_index_buffer);
 	SETNAME(m_index_buffer, "IndexBuffer");
 
-	HRESULT hr = LoadTextureFromFile(dxdevice, dxdevice_Context, "assets\city\textures\concrete_2", &material.DiffuseTexture);
+	HRESULT hr = LoadTextureFromFile(
+		dxdevice,
+		dxdevice_Context,
+		"assets/city/textures/Building_V02_C.png", 
+		&material.DiffuseTexture
+	);
+
+	if (FAILED(hr)) {
+		DebugBreak();
+	}
 
 	m_number_of_indices = (unsigned int)indices.size();
 
