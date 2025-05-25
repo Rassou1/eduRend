@@ -47,6 +47,18 @@ mat4f Camera::ProjectionMatrix() const noexcept
 
 void Camera::UpdateRotation(long dx, long dy) 
 {
+
+	float maxPitch = fPI / 2;
+	float minPitch = -fPI / 2;
 	m_yaw -= dx * 0.001;
 	m_pitch -= dy * 0.001;
+
+	if (m_pitch < minPitch) {
+		m_pitch = minPitch;
+	}
+
+	if (m_pitch > maxPitch) {
+		m_pitch = maxPitch;
+	}
+
 }
