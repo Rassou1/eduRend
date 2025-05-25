@@ -60,6 +60,9 @@ public:
 
 	void UpdateRotation(long dx, long dy);
 
+	linalg::vec3f m_position;
+	linalg::vec3f forward = (0, -1, 0);
+
 private:
 	// Aperture attributes
 	float m_vertical_fov;
@@ -77,8 +80,9 @@ private:
 	float m_yaw = 0;
 	float m_pitch = 0;
 
-	linalg::vec3f m_position;
+	
 	linalg::vec3f m_rotation;
+	
 };
 
 #endif

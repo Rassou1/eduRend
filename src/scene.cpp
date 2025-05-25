@@ -32,6 +32,7 @@ OurTestScene::OurTestScene(
 { 
 	InitTransformationBuffer();
 	// + init other CBuffers
+	InitLightCamBuffer();
 }
 
 //
@@ -134,6 +135,7 @@ void OurTestScene::Render()
 {
 	// Bind transformation_buffer to slot b0 of the VS
 	m_dxdevice_context->VSSetConstantBuffers(0, 1, &m_transformation_buffer);
+	m_dxdevice_context->PSSetConstantBuffers(0, 1, &m_lightCam_buffer);
 
 	// Obtain the matrices needed for rendering from the camera
 	m_view_matrix = m_camera->WorldToViewMatrix();
@@ -155,6 +157,8 @@ void OurTestScene::Render()
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	m_sponza->Render();
+
+	UpdateLightCamBuffer(vec4f(m_camera->forward, 0), vec4f(m_camera->m_position, 0));
 }
 
 void OurTestScene::Release()
@@ -165,6 +169,7 @@ void OurTestScene::Release()
 
 	SAFE_RELEASE(m_transformation_buffer);
 	// + release other CBuffers
+	SAFE_RELEASE(m_lightCam_buffer);
 }
 
 void OurTestScene::OnWindowResized(
@@ -202,5 +207,29 @@ void OurTestScene::UpdateTransformationBuffer(
 	matrixBuffer->ModelToWorldMatrix = ModelToWorldMatrix;
 	matrixBuffer->WorldToViewMatrix = WorldToViewMatrix;
 	matrixBuffer->ProjectionMatrix = ProjectionMatrix;
+	m_dxdevice_context->Unmap(m_transformation_buffer, 0);
+}
+
+void OurTestScene::InitLightCamBuffer()
+{
+	HRESULT hr;
+	D3D11_BUFFER_DESC matrixBufferDesc = { 0 };
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(LightCamBuffer);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_lightCam_buffer));
+}
+
+void OurTestScene::UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos)
+{
+	// Map the resource buffer, obtain a pointer and then write our matrices to it
+	D3D11_MAPPED_SUBRESOURCE resource;
+	m_dxdevice_context->Map(m_transformation_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	LightCamBuffer* matrixBuffer = (LightCamBuffer*)resource.pData;
+	matrixBuffer->lightPos = lightPos;
+	matrixBuffer->cameraPos = cameraPos;
 	m_dxdevice_context->Unmap(m_transformation_buffer, 0);
 }

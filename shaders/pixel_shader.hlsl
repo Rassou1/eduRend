@@ -1,6 +1,12 @@
 
 Texture2D texDiffuse : register(t0);
 
+cbuffer LightCamBuffer : register(b0)
+{
+    float4 lightPos;
+    float4 cameraPos;
+}
+
 struct PSIn
 {
 	float4 Pos  : SV_Position;

@@ -10,7 +10,7 @@ void Camera::MoveTo(const vec3f& position) noexcept
 
 void Camera::Move(const vec3f& direction) noexcept
 {	
-    vec3f forward = { sin(m_yaw), 0, cos(m_yaw)
+    forward = { sin(m_yaw), 0, cos(m_yaw)
     };
 	vec3f right = {cos(m_yaw), 0, -sin(m_yaw) };
 
