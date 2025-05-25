@@ -256,7 +256,7 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	HRESULT hr = LoadTextureFromFile(
 		dxdevice,
 		dxdevice_Context,
-		"assets/city/textures/Building_V02_C.png", 
+		"assets/textures/0001CD_diffuse.jpg", 
 		&material.DiffuseTexture
 	);
 

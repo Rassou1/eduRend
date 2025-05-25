@@ -24,6 +24,8 @@ struct PSIn
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEX;
     float3 PosWorld : POSITION;
+    float3 Binormal : BINORMAL;
+    float3 Tangent : TANGENT;
 };
 
 //-----------------------------------------------------------------------------------------
@@ -32,7 +34,11 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
-    input.TexCoord *= 1.5;
+    
+    //float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
+    
+    
+    //input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
    
     float3 N = normalize(input.Normal);
