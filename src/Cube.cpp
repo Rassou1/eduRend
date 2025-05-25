@@ -253,22 +253,23 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	dxdevice->CreateBuffer(&indexbufferDesc, &indexData, &m_index_buffer);
 	SETNAME(m_index_buffer, "IndexBuffer");
 
-	m_number_of_indices = (unsigned int)indices.size();
+	HRESULT hr = LoadTextureFromFile(dxdevice, dxdevice_Context, "assets\city\textures\concrete_2", &material.DiffuseTexture);
 
-	/*cube_material.DiffuseColour = vec3f(0.5, 0, 0);
-	cube_material.AmbientColour = vec3f(0, 0, 0.5);*/
+	m_number_of_indices = (unsigned int)indices.size();
 
 }
 
 void Cube::Render() const
 {
 	// Bind our vertex buffer
-	const UINT32 stride = sizeof(Vertex); //  sizeof(float) * 8;
+	const UINT32 stride = sizeof(Vertex);
 	const UINT32 offset = 0;
 	m_dxdevice_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &stride, &offset);
 
 	// Bind our index buffer
 	m_dxdevice_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+	m_dxdevice_context->PSSetShaderResources(0, 1, &material.DiffuseTexture.TextureView);
 
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);

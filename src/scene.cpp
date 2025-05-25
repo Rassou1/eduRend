@@ -60,6 +60,8 @@ void OurTestScene::Init()
 
 	orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
 
+	SetSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_MIRROR);
+
 }
 
 //
@@ -143,6 +145,7 @@ void OurTestScene::Render()
 	// Obtain the matrices needed for rendering from the camera
 	m_view_matrix = m_camera->WorldToViewMatrix();
 	m_projection_matrix = m_camera->ProjectionMatrix();
+	m_dxdevice_context->PSSetSamplers(0, 1, &sampler);
 
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
@@ -178,6 +181,7 @@ void OurTestScene::Release()
 	// + release other CBuffers
 	SAFE_RELEASE(m_lightCam_buffer);
 	SAFE_RELEASE(m_material_buffer);
+	SAFE_RELEASE(sampler);
 }
 
 void OurTestScene::OnWindowResized(
@@ -188,6 +192,24 @@ void OurTestScene::OnWindowResized(
 		m_camera->SetAspect(float(new_width) / new_height);
 
 	Scene::OnWindowResized(new_width, new_height);
+}
+
+void OurTestScene::SetSampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode)
+{
+	D3D11_SAMPLER_DESC samplerDesc =
+	{
+		filter,
+		textureAddressMode,
+		textureAddressMode,
+		textureAddressMode,
+		0.0f,
+		16,
+		D3D11_COMPARISON_NEVER,
+		{1.0f, 1.0f, 1.0f, 1.0f},
+		-FLT_MAX,
+		FLT_MAX,
+	};
+	m_dxdevice->CreateSamplerState(&samplerDesc, &sampler);
 }
 
 void OurTestScene::InitTransformationBuffer()

@@ -106,6 +106,9 @@ class OurTestScene : public Scene
 	mat4f m_view_matrix;
 	mat4f m_projection_matrix;
 
+	//Sampler state
+	ID3D11SamplerState* sampler;
+
 	// Misc
 	float m_angle = 0;			// A per-frame updated rotation angle (radians)...
 	float m_angular_velocity = fPI / 2;	// ...and its velocity (radians/sec)
@@ -166,6 +169,9 @@ public:
 	 * @param window_height New height
 	*/
 	void OnWindowResized(int window_width, int window_height) override;
+
+	void SetSampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode);
+
 };
 
 #endif
