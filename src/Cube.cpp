@@ -142,14 +142,14 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	vertices.push_back(v15);
 
 	//Triangle 1 indices
-	indices.push_back(15);
-	indices.push_back(13);
 	indices.push_back(12);
+	indices.push_back(13);
+	indices.push_back(15);
 
 	//Triangle 2 indices
-	indices.push_back(15);
-	indices.push_back(14);
 	indices.push_back(13);
+	indices.push_back(14);
+	indices.push_back(15);
 
 #pragma endregion
 
@@ -163,11 +163,11 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	v17.Normal = { 0, -1, 0 };
 	v17.TexCoord = { 1, 0 };
 	//Top right
-	v18.Position = { 0.5, -0.5f, 1 };
+	v18.Position = { 0.5, -0.5f, -1 };
 	v18.Normal = { 0, -1, 0 };
 	v18.TexCoord = { 1, 1 };
 	//Top left
-	v19.Position = { -0.5, -0.5f, 1 };
+	v19.Position = { -0.5, -0.5f, -1 };
 	v19.Normal = { 0, -1, 0 };
 	v19.TexCoord = { 0, 1 };
 
@@ -178,14 +178,14 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	vertices.push_back(v19);
 
 	//Triangle 1 indices
-	indices.push_back(16);
-	indices.push_back(17);
 	indices.push_back(19);
+	indices.push_back(17);
+	indices.push_back(16);
 
 	//Triangle 2 indices
-	indices.push_back(17);
-	indices.push_back(18);
 	indices.push_back(19);
+	indices.push_back(18);
+	indices.push_back(17);
 
 #pragma endregion
 
@@ -270,25 +270,6 @@ void Cube::Render() const
 	// Bind our index buffer
 	m_dxdevice_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
 
-	//material buffer
-	/*MaterialBuffer mb;
-	mb.AmbientClr = vec4f(cube_material.AmbientColour, 1.0f);
-	mb.DiffuseClr = vec4f(cube_material.DiffuseColour, 1.0f);
-	mb.SpecularClr = vec4f(cube_material.SpecularColour, material_Shininess);
-
-	D3D11_MAPPED_SUBRESOURCE mapped;
-	m_dxdevice_context->Map(m_material_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
-	memcpy(mapped.pData, &mb, sizeof(MaterialBuffer));
-	m_dxdevice_context->Unmap(m_material_buffer, 0);*/
-
-	//m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
-
-
 	// Make the drawcall
 	m_dxdevice_context->DrawIndexed(m_number_of_indices, 0, 0);
 }
-
-//void Model::SetMaterial(vec3f diffuse, vec3f ambient, vec3f specular, float shininess) 
-//{
-//	
-//}

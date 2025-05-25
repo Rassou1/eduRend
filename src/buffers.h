@@ -22,3 +22,11 @@ struct LightCamBuffer
 	linalg::vec4f lightPos;
 	linalg::vec4f cameraPos;
 };
+
+struct MaterialBuffer {
+	linalg::vec4f diffuse;
+	linalg::vec4f ambient;
+	linalg::vec4f specular;
+	float shininess;
+	linalg::vec3f padding;
+};

@@ -33,7 +33,7 @@ protected:
 	ID3D11Buffer* m_index_buffer = nullptr; //!< Pointer to gpu side index buffer
 
 public:
-
+	Material material;
 	/**
 	 * @brief Sets the protected member variables to the input params.
 	 * @param dxdevice ID3D11Device to be used in the model.
@@ -51,6 +51,13 @@ public:
 	 * @brief Destructor.
 	 * @details Releases the vertex and index buffers of the Model.
 	*/
+
+	void SetMaterial(vec3f diffuse, vec3f ambient, vec3f specular) {
+		material.DiffuseColour = diffuse;
+		material.AmbientColour = ambient;
+		material.SpecularColour = specular;
+	}
+
 	virtual ~Model()
 	{ 
 		SAFE_RELEASE(m_vertex_buffer);

@@ -81,6 +81,7 @@ class OurTestScene : public Scene
 	// + other CBuffers
 
 	ID3D11Buffer* m_lightCam_buffer = nullptr;
+	ID3D11Buffer* m_material_buffer = nullptr;
 
 	//
 	// Scene content
@@ -90,7 +91,7 @@ class OurTestScene : public Scene
 	Model* m_quad;
 	Model* m_sponza;
 	Model* m_cube;
-
+	
 	Model* orbitingCube;
 	Model* orbitingCube2;
 
@@ -120,6 +121,12 @@ class OurTestScene : public Scene
 	void InitLightCamBuffer();
 
 	void UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos);
+
+	//materialbuffer
+
+	void InitMaterialBuffer();
+
+	void UpdateMaterialBuffer(Material material, float shininess);
 
 public:
 	/**
