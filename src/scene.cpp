@@ -34,6 +34,20 @@ OurTestScene::OurTestScene(
 	// + init other CBuffers
 	InitLightCamBuffer();
 	InitMaterialBuffer();
+	
+	HRESULT hr = LoadCubeTextureFromFile(
+		dxdevice,
+		cubeMapFaces,
+		&cubeMapTexture);
+
+	if (SUCCEEDED(hr)) std::cout << "Cubemap OK" << std::endl;
+	else std::cout << "Cubemap failed to load" << std::endl;
+	
+	unsigned cube_slot = 0;
+	dxdevice_context->PSSetShaderResources(
+		cube_slot,
+		1,
+		&cubeMapTexture.TextureView);
 }
 
 //
@@ -55,10 +69,15 @@ void OurTestScene::Init()
 	m_cube = new Cube(m_dxdevice, m_dxdevice_context);
 	m_sponza = new OBJModel("assets/crytek-sponza/sponza.obj", m_dxdevice, m_dxdevice_context);
 
-	orbitingCube = new Cube(m_dxdevice, m_dxdevice_context);
-	orbitingCube2 = new Cube(m_dxdevice, m_dxdevice_context);
+	//orbitingCube = new Cube(m_dxdevice, m_dxdevice_context);
+	//orbitingCube2 = new Cube(m_dxdevice, m_dxdevice_context);
 
 	//orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
+
+	
+
+	
+
 
 	SetSampler(D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
 
@@ -108,22 +127,22 @@ void OurTestScene::Update(
 
 	m_cube_transform = mat4f::translation(0, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+		mat4f::scaling(3, 3, 3);
 
-	orbitingCubeTransform = m_cube_transform *
-		mat4f::translation(3, 0, 0) *			// No translation
-		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+	//orbitingCubeTransform = m_cube_transform *
+	//	mat4f::translation(3, 0, 0) *			// No translation
+	//	mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+	//	mat4f::scaling(1, 1, 1);
 
 	//orbitingCubeTransform2 = orbitingCubeTransform *
 	//	mat4f::translation(3, 0, 0) *
 	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 	//	mat4f::scaling(0.25, 0.25, 0.25);
 
-	orbitingCubeTransform2 =
-		mat4f::translation(-3, 0, 0) *
-		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+	//orbitingCubeTransform2 =
+	//	mat4f::translation(-3, 0, 0) *
+	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+	//	mat4f::scaling(1, 1, 1);
 
 
 	// Increment the rotation angle.
@@ -161,13 +180,13 @@ void OurTestScene::Render()
 	UpdateMaterialBuffer(m_cube->material, 1.0f);
 	m_cube->Render();
 	
-	UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube->material, 1.0f);
-	orbitingCube->Render();
+	//UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
+	//UpdateMaterialBuffer(orbitingCube->material, 1.0f);
+	//orbitingCube->Render();
 	
-	UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube2->material, 1.0f);
-	orbitingCube2->Render();
+	//UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
+	//UpdateMaterialBuffer(orbitingCube2->material, 1.0f);
+	//orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
@@ -188,6 +207,7 @@ void OurTestScene::Release()
 	SAFE_RELEASE(m_lightCam_buffer);
 	SAFE_RELEASE(m_material_buffer);
 	SAFE_RELEASE(sampler);
+	SAFE_RELEASE(cubeMapTexture.TextureView);
 }
 
 void OurTestScene::OnWindowResized(

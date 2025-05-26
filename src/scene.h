@@ -109,6 +109,16 @@ class OurTestScene : public Scene
 	//Sampler state
 	ID3D11SamplerState* sampler;
 
+	Texture cubeMapTexture;
+	const char* cubeMapFaces[6] = {
+		"/assets/cubemaps/brightday/posx.png",
+		"/assets/cubemaps/brightday/posy.png",
+		"/assets/cubemaps/brightday/posz.png",
+		"/assets/cubemaps/brightday/negx.png",
+		"/assets/cubemaps/brightday/negy.png",
+		"/assets/cubemaps/brightday/negz.png",
+	};
+
 	// Misc
 	float m_angle = 0;			// A per-frame updated rotation angle (radians)...
 	float m_angular_velocity = fPI / 2;	// ...and its velocity (radians/sec)
