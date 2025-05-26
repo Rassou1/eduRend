@@ -1,7 +1,9 @@
 
 Texture2D texDiffuse : register(t0);
+Texture2D normalTexture : register(t1);
 
 SamplerState texSampler : register(s0);
+SamplerState cubeSampler : register(s1);
 
 cbuffer LightCamBuffer : register(b0)
 {
@@ -35,13 +37,16 @@ struct PSIn
 float4 PS_main(PSIn input) : SV_Target
 {
     
-    //float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
+    float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
     
     
     //input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
    
-    float3 N = normalize(input.Normal);
+    float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz;
+    
+    //float3 N = normalize(input.Normal);
+    float3 N = normalize(mul(TBN, normalTS));
     float3 L = normalize(lightPos.xyz - input.PosWorld);
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);

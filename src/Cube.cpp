@@ -10,22 +10,31 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	
 	//For all the faces, please double check the texture coordinates on all of them. 
 	//I think I might have inverted the x/y like 3/4 of them
+
 #pragma region frontFace
 	//Bottom left
 	v0.Position = { -0.5, -0.5f, 0.0f };
 	v0.Normal = { 0, 0, 1 };
+	v0.Binormal = { 0, 1, 0 };
+	v0.Tangent = { 1, 0, 0 };
 	v0.TexCoord = { 0, 0 };
 	//Bottom right
 	v1.Position = { 0.5, -0.5f, 0.0f };
 	v1.Normal = { 0, 0, 1 };
+	v1.Binormal = { 0, 1, 0 };
+	v1.Tangent = { 1, 0, 0 }; 
 	v1.TexCoord = { 0, 1 };
 	//Top right
 	v2.Position = { 0.5, 0.5f, 0.0f };
 	v2.Normal = { 0, 0, 1 };
+	v2.Binormal = { 0, 1, 0 };
+	v2.Tangent = { 1, 0, 0 };
 	v2.TexCoord = { 1, 1 };
 	//Top left
 	v3.Position = { -0.5, 0.5f, 0.0f };
 	v3.Normal = { 0, 0, 1 };
+	v3.Binormal = { 0, 1, 0 };
+	v3.Tangent = { 1, 0, 0 };
 	v3.TexCoord = { 1, 0 };
 
 	//Push all vertices into vector
@@ -50,18 +59,26 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	//Bottom left
 	v4.Position = { 0.5, -0.5f, 0.0f };
 	v4.Normal = { 1, 0, 0 };
+	v4.Binormal = { 0, 1, 0 };
+	v4.Tangent = { 0, 0, -1 };
 	v4.TexCoord = { 0, 0 };
 	//Bottom right
 	v5.Position = { 0.5, -0.5f, -1 };
 	v5.Normal = { 1, 0, 0 };
+	v5.Binormal = { 0, 1, 0 };
+	v5.Tangent = { 0, 0, -1 };
 	v5.TexCoord = { 0, 1 };
 	//Top right
 	v6.Position = { 0.5, 0.5f, -1 };
 	v6.Normal = { 1, 0, 0 };
+	v6.Binormal = { 0, 1, 0 };
+	v6.Tangent = { 0, 0, -1 };
 	v6.TexCoord = { 1, 1 };
 	//Top left
 	v7.Position = { 0.5, 0.5f, 0.0f };
 	v7.Normal = { 1, 0, 0 };
+	v7.Binormal = { 0, 1, 0 };
+	v7.Tangent = { 0, 0, -1 };
 	v7.TexCoord = { 1, 0 };
 
 	//Push vertices into vector
@@ -85,18 +102,26 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	//Bottom left
 	v8.Position = { -0.5, -0.5f, 0.0f };
 	v8.Normal = { -1, 0, 0 };
+	v8.Binormal = { 0, 1, 0 };
+	v8.Tangent = { 0, 0, 1 };
 	v8.TexCoord = { 0, 0 };
 	//Bottom right
 	v9.Position = { -0.5, -0.5f, -1 };
 	v9.Normal = { -1, 0, 0 };
+	v9.Binormal = { 0, 1, 0 };
+	v9.Tangent = { 0, 0, 1 };
 	v9.TexCoord = { 0, 1 };
 	//Top right
 	v10.Position = { -0.5, 0.5f, -1 };
 	v10.Normal = { -1, 0, 0 };
+	v10.Binormal = { 0, 1, 0 };
+	v10.Tangent = { 0, 0, 1 };
 	v10.TexCoord = { 1, 1 };
 	//Top left
 	v11.Position = { -0.5, 0.5f, 0.0f };
 	v11.Normal = { -1, 0, 0 };
+	v11.Binormal = { 0, 1, 0 };
+	v11.Tangent = { 0, 0, 1 };
 	v11.TexCoord = { 1, 0 };
 
 	//Push vertices into vector
@@ -121,17 +146,25 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	//Bottom left
 	v12.Position = { -0.5, 0.5f, 0.0f };
 	v12.Normal = { 0, 1, 0 };
+	v12.Binormal = { 0, 0, -1 };
+	v12.Tangent = { 1, 0, 0 };
 	v12.TexCoord = { 0, 0 };
 	//Bottom right
 	v13.Position = { 0.5, 0.5f, 0.0f };
 	v13.Normal = { 0, 1, 0 };
+	v13.Binormal = { 0, 0, -1 };
+	v13.Tangent = { 1, 0, 0 };
 	v13.TexCoord = { 1, 0 };
 	//Top right
 	v14.Position = { 0.5, 0.5f, -1 };
 	v14.Normal = { 0, 1, 0 };
+	v14.Binormal = { 0, 0, -1 };
+	v14.Tangent = { 1, 0, 0 };
 	v14.TexCoord = { 1, 1 };
 	//Top left
 	v15.Position = { -0.5, 0.5f, -1 };
+	v15.Binormal = { 0, 0, -1 };
+	v15.Tangent = { 1, 0, 0 };
 	v15.Normal = { 0, 1, 0 };
 	v15.TexCoord = { 0, 1 };
 
@@ -157,18 +190,26 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	//Bottom left
 	v16.Position = { -0.5, -0.5f, 0.0f };
 	v16.Normal = { 0, -1, 0 };
+	v16.Binormal = { 0, 0, 1 };
+	v16.Tangent = { 1, 0, 0 };
 	v16.TexCoord = { 0, 0 };
 	//Bottom right
 	v17.Position = { 0.5, -0.5f, 0.0f };
 	v17.Normal = { 0, -1, 0 };
+	v17.Binormal = { 0, 0, 1 };
+	v17.Tangent = { 1, 0, 0 };
 	v17.TexCoord = { 1, 0 };
 	//Top right
 	v18.Position = { 0.5, -0.5f, -1 };
 	v18.Normal = { 0, -1, 0 };
+	v18.Binormal = { 0, 0, 1 };
+	v18.Tangent = { 1, 0, 0 };
 	v18.TexCoord = { 1, 1 };
 	//Top left
 	v19.Position = { -0.5, -0.5f, -1 };
 	v19.Normal = { 0, -1, 0 };
+	v19.Binormal = { 0, 0, 1 };
+	v19.Tangent = { 1, 0, 0 };
 	v19.TexCoord = { 0, 1 };
 
 	//Push vertices into vector
@@ -193,18 +234,26 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	//Bottom left
 	v20.Position = { -0.5, -0.5f, -1 };
 	v20.Normal = { 0, 0, -1 };
+	v20.Binormal = { 0, 1, 0 };
+	v20.Tangent = { -1, 0, 0 };
 	v20.TexCoord = { 0, 0 };
 	//Bottom right
 	v21.Position = { 0.5, -0.5f, -1 };
 	v21.Normal = { 0, 0, -1 };
+	v21.Binormal = { 0, 1, 0 };
+	v21.Tangent = { -1, 0, 0 };
 	v21.TexCoord = { 0, 1 };
 	//Top right
 	v22.Position = { 0.5, 0.5f, -1 };
 	v22.Normal = { 0, 0, -1 };
+	v22.Binormal = { 0, 1, 0 };
+	v22.Tangent = { -1, 0, 0 };
 	v22.TexCoord = { 1, 1 };
 	//Top left
 	v23.Position = { -0.5, 0.5f, -1 };
 	v23.Normal = { 0, 0, -1 };
+	v23.Binormal = { 0, 1, 0 };
+	v23.Tangent = { -1, 0, 0 };
 	v23.TexCoord = { 1, 0 };
 
 	//Push vertices into vector
@@ -260,6 +309,15 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 		&material.DiffuseTexture
 	);
 
+	if (FAILED(hr)) {
+		DebugBreak();
+	}
+	hr = LoadTextureFromFile(
+		dxdevice,
+		dxdevice_Context,
+		"assets/textures/0001CD_normal.jpg",
+		&material.NormalTexture
+	);
 	if (FAILED(hr)) {
 		DebugBreak();
 	}
