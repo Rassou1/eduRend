@@ -17,10 +17,12 @@ struct TransformationBuffer
 	linalg::mat4f ProjectionMatrix; //!< Matrix for converting from view space to clip cpace.
 };
 
-struct LightCamBuffer 
+struct LightCamBuffer
 {
 	linalg::vec4f lightPos;
 	linalg::vec4f cameraPos;
+	int isSkybox;
+	linalg::vec3f lightingPadding;
 };
 
 struct MaterialBuffer {

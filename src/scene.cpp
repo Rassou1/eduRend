@@ -35,15 +35,29 @@ OurTestScene::OurTestScene(
 	InitLightCamBuffer();
 	InitMaterialBuffer();
 	
+	
+	const char* cube_filenames[6] =
+	{
+	   "assets/cubemaps/brightday/posx.png",
+	   "assets/cubemaps/brightday/negx.png",
+	   "assets/cubemaps/brightday/posy.png",
+	   "assets/cubemaps/brightday/negy.png",
+	   "assets/cubemaps/brightday/posz.png",
+	   "assets/cubemaps/brightday/negz.png"
+	};
+
 	HRESULT hr = LoadCubeTextureFromFile(
 		dxdevice,
-		cubeMapFaces,
+		cube_filenames,
 		&cubeMapTexture);
 
 	if (SUCCEEDED(hr)) std::cout << "Cubemap OK" << std::endl;
-	else std::cout << "Cubemap failed to load" << std::endl;
+	else {
+		std::cout << "Cubemap failed to load" << std::endl;
+		DebugBreak();
+	}
 	
-	unsigned cube_slot = 0;
+	unsigned cube_slot = 1;
 	dxdevice_context->PSSetShaderResources(
 		cube_slot,
 		1,
@@ -75,12 +89,14 @@ void OurTestScene::Init()
 	//orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
 
 	
+	
+	SetSampler(skyboxSampler, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP);
+
+	skybox = new Cube(m_dxdevice, m_dxdevice_context);
+
+	SetSampler(sampler, D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
 
 	
-
-
-	SetSampler(D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
-
 }
 
 //
@@ -129,6 +145,8 @@ void OurTestScene::Update(
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 		mat4f::scaling(3, 3, 3);
 
+	skyboxTransform = mat4f::translation((m_camera->m_position)) * mat4f::scaling(200.0f);
+
 	//orbitingCubeTransform = m_cube_transform *
 	//	mat4f::translation(3, 0, 0) *			// No translation
 	//	mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
@@ -172,10 +190,16 @@ void OurTestScene::Render()
 	m_projection_matrix = m_camera->ProjectionMatrix();
 	m_dxdevice_context->PSSetSamplers(0, 1, &sampler);
 
+	UpdateLightCamBuffer(vec4f(m_camera->m_position, 1.0f), 0, 1);
+	UpdateTransformationBuffer(skyboxTransform, m_view_matrix, m_projection_matrix);
+	UpdateMaterialBuffer(skybox->material, 1.0f);
+	skybox->Render();
+
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	//m_quad->Render();
 
+	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f), 0);
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(m_cube->material, 1.0f);
 	m_cube->Render();
@@ -193,7 +217,6 @@ void OurTestScene::Render()
 	UpdateMaterialBuffer(m_sponza->material, 1.0f);
 	m_sponza->Render();
 
-	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f));
 }
 
 void OurTestScene::Release()
@@ -220,7 +243,7 @@ void OurTestScene::OnWindowResized(
 	Scene::OnWindowResized(new_width, new_height);
 }
 
-void OurTestScene::SetSampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode)
+void OurTestScene::SetSampler(ID3D11SamplerState* sampler, D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode)
 {
 	D3D11_SAMPLER_DESC samplerDesc =
 	{
@@ -279,7 +302,7 @@ void OurTestScene::InitLightCamBuffer()
 	ASSERT(hr = m_dxdevice->CreateBuffer(&matrixBufferDesc, nullptr, &m_lightCam_buffer));
 }
 
-void OurTestScene::UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos)
+void OurTestScene::UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos, bool isSkybox)
 {
 	// Map the resource buffer, obtain a pointer and then write our matrices to it
 	D3D11_MAPPED_SUBRESOURCE resource;
@@ -287,6 +310,18 @@ void OurTestScene::UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos)
 	LightCamBuffer* matrixBuffer = (LightCamBuffer*)resource.pData;
 	matrixBuffer->lightPos = lightPos;
 	matrixBuffer->cameraPos = cameraPos;
+	matrixBuffer->isSkybox = isSkybox ? 1 : 0;
+	m_dxdevice_context->Unmap(m_lightCam_buffer, 0);
+}
+
+void OurTestScene::UpdateLightCamBuffer(vec4f cameraPos, bool isSkybox)
+{
+	D3D11_MAPPED_SUBRESOURCE resource;
+	m_dxdevice_context->Map(m_lightCam_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	LightCamBuffer* matrixBuffer = (LightCamBuffer*)resource.pData;
+	matrixBuffer->lightPos = vec4f(10.0f, 5.0f, 10.0f, 1.0f);
+	matrixBuffer->cameraPos = cameraPos;
+	matrixBuffer->isSkybox = isSkybox ? 1 : 0;
 	m_dxdevice_context->Unmap(m_lightCam_buffer, 0);
 }
 

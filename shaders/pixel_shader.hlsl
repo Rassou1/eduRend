@@ -1,14 +1,18 @@
 
 Texture2D texDiffuse : register(t0);
 Texture2D normalTexture : register(t1);
+TextureCube Skybox : register(t5);
 
 SamplerState texSampler : register(s0);
 SamplerState cubeSampler : register(s1);
+SamplerState skyboxSampler : register(s2);
 
 cbuffer LightCamBuffer : register(b0)
 {
     float4 lightPos;
     float4 cameraPos;
+    int isSkybox;
+    float3 lightPadding;
 }
 
 cbuffer MaterialBuffer : register(b1)
@@ -36,6 +40,14 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
+    if (isSkybox == 1)
+    {
+        float3 viewDir = normalize(input.PosWorld.xyz - cameraPos.xyz);
+        float3 skyCOlor = Skybox.Sample(skyboxSampler, viewDir).rgb;
+        return float4(skyCOlor, 1.0f);
+
+    }
+    
     
     float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
     
@@ -51,11 +63,14 @@ float4 PS_main(PSIn input) : SV_Target
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);
     
+    float3 reflectionDirection = reflect(V, N);
+    float3 reflectionColor = Skybox.Sample(skyboxSampler, reflectionDirection).xyz;
+    
     float3 ambientTerm = ambient.xyz * textureColor.xyz;
     float diff = max(dot(L, N), 0.0f);
-    float3 diffuseTerm = diffuse.xyz * diff;
+    float3 diffuseTerm = (diffuse.xyz * reflectionColor) * diff;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.w;
+    float3 specularTerm = specular.xyz * spec * lightPos.w ;
     
     float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
     return float4(finalColor, 1.0f);

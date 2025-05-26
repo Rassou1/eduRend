@@ -95,6 +95,8 @@ class OurTestScene : public Scene
 	Model* orbitingCube;
 	Model* orbitingCube2;
 
+	Model* skybox;
+
 	mat4f m_sponza_transform;
 	mat4f m_quad_transform;
 	mat4f m_cube_transform;
@@ -102,6 +104,7 @@ class OurTestScene : public Scene
 	mat4f orbitingCubeTransform;
 	mat4f orbitingCubeTransform2;
 
+	mat4f skyboxTransform;
 
 	mat4f m_view_matrix;
 	mat4f m_projection_matrix;
@@ -110,14 +113,8 @@ class OurTestScene : public Scene
 	ID3D11SamplerState* sampler;
 
 	Texture cubeMapTexture;
-	const char* cubeMapFaces[6] = {
-		"/assets/cubemaps/brightday/posx.png",
-		"/assets/cubemaps/brightday/posy.png",
-		"/assets/cubemaps/brightday/posz.png",
-		"/assets/cubemaps/brightday/negx.png",
-		"/assets/cubemaps/brightday/negy.png",
-		"/assets/cubemaps/brightday/negz.png",
-	};
+
+	ID3D11SamplerState* skyboxSampler;
 
 	// Misc
 	float m_angle = 0;			// A per-frame updated rotation angle (radians)...
@@ -133,7 +130,8 @@ class OurTestScene : public Scene
 
 	void InitLightCamBuffer();
 
-	void UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos);
+	void UpdateLightCamBuffer(vec4f lightPos, vec4f cameraPos, bool isSkybox);
+	void UpdateLightCamBuffer(vec4f cameraPos, bool isSkybox);
 
 	//materialbuffer
 
@@ -180,7 +178,7 @@ public:
 	*/
 	void OnWindowResized(int window_width, int window_height) override;
 
-	void SetSampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode);
+	void SetSampler(ID3D11SamplerState* sampler, D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode);
 
 };
 
