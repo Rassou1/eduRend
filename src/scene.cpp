@@ -60,6 +60,8 @@ void OurTestScene::Init()
 
 	//orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
 
+	//SetSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
+	//SetSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
 	SetSampler(D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
 
 }
