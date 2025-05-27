@@ -42,8 +42,8 @@ PSIn VS_main(VSIn input)
     matrix MVP = mul(ProjectionMatrix, MV);
     
     // Perform transformations and send to output
-    output.Pos = mul(MVP, float4(input.Pos, 1.0f));
-    output.Normal = normalize(mul(ModelToWorldMatrix, float4(input.Normal, 0.0f)).xyz);
+    output.Pos = mul(MVP, float4(input.Pos, 1));
+    output.Normal = normalize(mul(ModelToWorldMatrix, float4(input.Normal, 0)).xyz);
     output.TexCoord = input.TexCoord;
         
     return output;
