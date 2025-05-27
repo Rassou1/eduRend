@@ -58,11 +58,7 @@ void OurTestScene::Init()
 	orbitingCube = new Cube(m_dxdevice, m_dxdevice_context);
 	orbitingCube2 = new Cube(m_dxdevice, m_dxdevice_context);
 
-	//orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
-
-	//SetSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP);
-	//SetSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP);
-	SetSampler(D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_WRAP);
+	orbitingCube->SetMaterial(vec3f(0.0f, 0.5f, 0.0f), vec3f(0.0f, 0.0f, 0.5f), vec3f(1.0f, 1.0f, 1.0f));
 
 }
 
@@ -115,21 +111,15 @@ void OurTestScene::Update(
 	orbitingCubeTransform = m_cube_transform *
 		mat4f::translation(3, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+		mat4f::scaling(0.5, 0.5, 0.5);
 
-	//orbitingCubeTransform2 = orbitingCubeTransform *
-	//	mat4f::translation(3, 0, 0) *
-	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-	//	mat4f::scaling(0.25, 0.25, 0.25);
-
-	orbitingCubeTransform2 =
-		mat4f::translation(-3, 0, 0) *
+	orbitingCubeTransform2 = orbitingCubeTransform *
+		mat4f::translation(3, 0, 0) *
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
-
+		mat4f::scaling(0.25, 0.25, 0.25);
 
 	// Increment the rotation angle.
-	//m_angle += m_angular_velocity * dt;
+	m_angle += m_angular_velocity * dt;
 
 	// Print fps
 	m_fps_cooldown -= dt;
@@ -151,32 +141,32 @@ void OurTestScene::Render()
 	m_dxdevice_context->PSSetConstantBuffers(0, 1, &m_lightCam_buffer);
 	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
 	// Obtain the matrices needed for rendering from the camera
+	
 	m_view_matrix = m_camera->WorldToViewMatrix();
 	m_projection_matrix = m_camera->ProjectionMatrix();
-	m_dxdevice_context->PSSetSamplers(0, 1, &sampler);
+	
+	UpdateLightCamBuffer(vec4f(0.0f, 0.0f, 5.0f, 0.0f), vec4f(m_camera->m_position, 0.0f));
 
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	//m_quad->Render();
 
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(m_cube->material, 1.0f);
+	UpdateMaterialBuffer(m_cube->material, 32.0f);
 	m_cube->Render();
 	
 	UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube->material, 1.0f);
+	UpdateMaterialBuffer(orbitingCube->material, 32.0f);
 	orbitingCube->Render();
 	
 	UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube2->material, 1.0f);
+	UpdateMaterialBuffer(orbitingCube2->material, 32.0f);
 	orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(m_sponza->material, 1.0f);
 	m_sponza->Render();
-
-	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f));
 }
 
 void OurTestScene::Release()
@@ -189,7 +179,6 @@ void OurTestScene::Release()
 	// + release other CBuffers
 	SAFE_RELEASE(m_lightCam_buffer);
 	SAFE_RELEASE(m_material_buffer);
-	SAFE_RELEASE(sampler);
 }
 
 void OurTestScene::OnWindowResized(
@@ -200,24 +189,6 @@ void OurTestScene::OnWindowResized(
 		m_camera->SetAspect(float(new_width) / new_height);
 
 	Scene::OnWindowResized(new_width, new_height);
-}
-
-void OurTestScene::SetSampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE textureAddressMode)
-{
-	D3D11_SAMPLER_DESC samplerDesc =
-	{
-		filter,
-		textureAddressMode,
-		textureAddressMode,
-		textureAddressMode,
-		0.0f,
-		16,
-		D3D11_COMPARISON_NEVER,
-		{1.0f, 1.0f, 1.0f, 1.0f},
-		-FLT_MAX,
-		FLT_MAX,
-	};
-	m_dxdevice->CreateSamplerState(&samplerDesc, &sampler);
 }
 
 void OurTestScene::InitTransformationBuffer()

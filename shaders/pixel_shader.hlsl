@@ -1,8 +1,6 @@
 
 Texture2D texDiffuse : register(t0);
 
-SamplerState texSampler : register(s0);
-
 cbuffer LightCamBuffer : register(b0)
 {
     float4 lightPos;
@@ -32,19 +30,30 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
-    input.TexCoord *= 1.5;
-    float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
-   
+    //float3 N = normalize(input.Normal);
+    //float3 L = normalize(lightPos.xyz - input.PosWorld.xyz);
+    //float3 V = normalize(cameraPos.xyz - input.PosWorld.xyz);
+    //float3 R = reflect(-L, N);
+    
+    //float3 ambientTerm = ambient.xyz * lightPos.xyz;
+    
+    //float diff = max(dot(L, N), 0.0f);
+    //float3 diffuseTerm = diffuse.xyz * diff * lightPos.xyz;
+    //float spec = pow(max(dot(R, V), 0.0f), shininess);
+    //float3 specularTerm = specular.xyz * spec * lightPos.xyz;
+    
+    //float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
+    
     float3 N = normalize(input.Normal);
     float3 L = normalize(lightPos.xyz - input.PosWorld);
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);
     
-    float3 ambientTerm = ambient.xyz * textureColor.xyz;
+    float3 ambientTerm = ambient.xyz;
     float diff = max(dot(L, N), 0.0f);
     float3 diffuseTerm = diffuse.xyz * diff;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.w;
+    float3 specularTerm = specular.xyz * spec;
     
     float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
     return float4(finalColor, 1.0f);
