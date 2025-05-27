@@ -37,28 +37,52 @@ struct PSIn
 float4 PS_main(PSIn input) : SV_Target
 {
     
-    float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
-    
-    
+    float3 N = normalize(input.Normal);
+    float3 T = normalize(input.Tangent);
+    float3 B = normalize(cross(N, T));
+    float3x3 TBN = float3x3(T, B, N);
+
     //input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
-   
-    float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz;
     
-    //float3 N = normalize(input.Normal);
-    float3 N = normalize(mul(TBN, normalTS));
+    float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz * 2.0 - 1.0;
+    N = normalize(mul(normalTS, TBN)); 
+
+    // Lighting calculations
     float3 L = normalize(lightPos.xyz - input.PosWorld);
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);
-    
+
+    // Phong terms
     float3 ambientTerm = ambient.xyz * textureColor.xyz;
     float diff = max(dot(L, N), 0.0f);
-    float3 diffuseTerm = diffuse.xyz * diff;
+    float3 diffuseTerm = diffuse.xyz * diff * textureColor.xyz;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.w;
+    float3 specularTerm = specular.xyz * spec;
+
+    return float4(ambientTerm + diffuseTerm + specularTerm, 1.0f);
     
-    float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
-    return float4(finalColor, 1.0f);
+    //float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
+    
+    
+
+   
+    //float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz;
+    
+    ////float3 N = normalize(input.Normal);
+    //float3 N = normalize(mul(TBN, normalTS));
+    //float3 L = normalize(lightPos.xyz - input.PosWorld);
+    //float3 V = normalize(cameraPos.xyz - input.PosWorld);
+    //float3 R = reflect(-L, N);
+    
+    //float3 ambientTerm = ambient.xyz * textureColor.xyz;
+    //float diff = max(dot(L, N), 0.0f);
+    //float3 diffuseTerm = diffuse.xyz * diff;
+    //float spec = pow(max(dot(R, V), 0.0f), shininess);
+    //float3 specularTerm = specular.xyz * spec * lightPos.w;
+    
+    //float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
+    //return float4(finalColor, 1.0f);
 	
 	
 	// Debug shading #1: map and return normal as a color, i.e. from [-1,1]->[0,1] per component

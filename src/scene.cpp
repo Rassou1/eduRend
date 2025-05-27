@@ -108,22 +108,22 @@ void OurTestScene::Update(
 
 	m_cube_transform = mat4f::translation(0, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+		mat4f::scaling(5, 5, 5);
 
-	orbitingCubeTransform = m_cube_transform *
-		mat4f::translation(3, 0, 0) *			// No translation
-		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+	//orbitingCubeTransform = m_cube_transform *
+	//	mat4f::translation(3, 0, 0) *			// No translation
+	//	mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+	//	mat4f::scaling(1, 1, 1);
 
 	//orbitingCubeTransform2 = orbitingCubeTransform *
 	//	mat4f::translation(3, 0, 0) *
 	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 	//	mat4f::scaling(0.25, 0.25, 0.25);
 
-	orbitingCubeTransform2 =
-		mat4f::translation(-3, 0, 0) *
-		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+	//orbitingCubeTransform2 =
+	//	mat4f::translation(-3, 0, 0) *
+	//	mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+	//	mat4f::scaling(1, 1, 1);
 
 
 	// Increment the rotation angle.
@@ -157,24 +157,26 @@ void OurTestScene::Render()
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	//m_quad->Render();
 
+	UpdateLightCamBuffer(vec4f(-7.0f, 0.0f, 0.0f, 0.0f), vec4f(m_camera->m_position, 0.0f));
+
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(m_cube->material, 1.0f);
+	UpdateMaterialBuffer(m_cube->material, 32.0f);
 	m_cube->Render();
 	
-	UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube->material, 1.0f);
-	orbitingCube->Render();
-	
-	UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube2->material, 1.0f);
-	orbitingCube2->Render();
+	//UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
+	//UpdateMaterialBuffer(orbitingCube->material, 32.0f);
+	//orbitingCube->Render();
+	//
+	//UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
+	//UpdateMaterialBuffer(orbitingCube2->material, 32.0f);
+	//orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(m_sponza->material, 1.0f);
 	m_sponza->Render();
 
-	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f));
+	
 }
 
 void OurTestScene::Release()
