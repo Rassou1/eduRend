@@ -1,4 +1,3 @@
-
 Texture2D texDiffuse : register(t0);
 Texture2D normalTexture : register(t1);
 TextureCube Skybox : register(t5);
@@ -26,9 +25,9 @@ cbuffer MaterialBuffer : register(b1)
 
 struct PSIn
 {
-	float4 Pos  : SV_Position;
-	float3 Normal : NORMAL;
-	float2 TexCoord : TEX;
+    float4 Pos : SV_Position;
+    float3 Normal : NORMAL;
+    float2 TexCoord : TEX;
     float3 PosWorld : POSITION;
     float3 Binormal : BINORMAL;
     float3 Tangent : TANGENT;
@@ -40,40 +39,69 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
+    
     if (isSkybox == 1)
     {
         float3 viewDir = normalize(input.PosWorld.xyz - cameraPos.xyz);
-        float3 skyColor = Skybox.Sample(skyboxSampler, viewDir).rgb;
+        float3 skyColor = Skybox.Sample(skyboxSampler, -viewDir).xyz;
+        input.Normal *= -1.0f;
         return float4(skyColor, 1.0f);
-
     }
     
-    
-    float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
-    
-    
+    float3 N = normalize(input.Normal);
+    float3 T = normalize(input.Tangent);
+    T = normalize(T - dot(T, N) * N); 
+    float3 B = cross(N, T); 
+    //float3 B = input.Binormal;
+    float3x3 TBN = float3x3(T, B, N);
+
     //input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
-   
-    float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz;
     
-    //float3 N = normalize(input.Normal);
-    float3 N = normalize(mul(TBN, normalTS));
+    
+    
+    float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz * 2.0f - 1.0f;
+    N = normalize(mul(normalTS, TBN));
+
     float3 L = normalize(lightPos.xyz - input.PosWorld);
     float3 V = normalize(cameraPos.xyz - input.PosWorld);
     float3 R = reflect(-L, N);
-    
-    float3 reflectionDirection = reflect(V, N);
+
+    float3 reflectionDirection = reflect(V, input.Normal);
     float3 reflectionColor = Skybox.Sample(skyboxSampler, reflectionDirection).xyz;
     
     float3 ambientTerm = ambient.xyz * textureColor.xyz;
     float diff = max(dot(L, N), 0.0f);
-    float3 diffuseTerm = (diffuse.xyz * reflectionColor) * diff;
+    float3 diffuseTerm = diffuse.xyz * diff * textureColor.xyz + reflectionColor;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.w ;
+    float3 specularTerm = specular.xyz * spec;
+
+    //return float4(reflectionDirection * 0.5 + 0.5, 1.0); // Should show smooth gradients
     
-    float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
-    return float4(finalColor, 1.0f);
+    return (float4(reflectionColor, 1.0f));
+    //return float4(ambientTerm + diffuseTerm + specularTerm, 1.0f);
+    
+    //float3x3 TBN = float3x3(normalize(input.Tangent), normalize(input.Binormal), input.Normal);
+    
+    
+
+   
+    //float3 normalTS = normalTexture.Sample(texSampler, input.TexCoord).xyz;
+    
+    ////float3 N = normalize(input.Normal);
+    //float3 N = normalize(mul(TBN, normalTS));
+    //float3 L = normalize(lightPos.xyz - input.PosWorld);
+    //float3 V = normalize(cameraPos.xyz - input.PosWorld);
+    //float3 R = reflect(-L, N);
+    
+    //float3 ambientTerm = ambient.xyz * textureColor.xyz;
+    //float diff = max(dot(L, N), 0.0f);
+    //float3 diffuseTerm = diffuse.xyz * diff;
+    //float spec = pow(max(dot(R, V), 0.0f), shininess);
+    //float3 specularTerm = specular.xyz * spec * lightPos.w;
+    
+    //float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
+    //return float4(finalColor, 1.0f);
 	
 	
 	// Debug shading #1: map and return normal as a color, i.e. from [-1,1]->[0,1] per component

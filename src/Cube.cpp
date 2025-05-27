@@ -17,25 +17,25 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	v0.Normal = { 0, 0, 1 };
 	v0.Binormal = { 0, 1, 0 };
 	v0.Tangent = { 1, 0, 0 };
-	v0.TexCoord = { 0, 0 };
+	v0.TexCoord = { 0, 1 };
 	//Bottom right
 	v1.Position = { 0.5, -0.5f, 0.0f };
 	v1.Normal = { 0, 0, 1 };
 	v1.Binormal = { 0, 1, 0 };
 	v1.Tangent = { 1, 0, 0 }; 
-	v1.TexCoord = { 0, 1 };
+	v1.TexCoord = { 1, 1 };
 	//Top right
 	v2.Position = { 0.5, 0.5f, 0.0f };
 	v2.Normal = { 0, 0, 1 };
 	v2.Binormal = { 0, 1, 0 };
 	v2.Tangent = { 1, 0, 0 };
-	v2.TexCoord = { 1, 1 };
+	v2.TexCoord = { 1, 0 };
 	//Top left
 	v3.Position = { -0.5, 0.5f, 0.0f };
 	v3.Normal = { 0, 0, 1 };
 	v3.Binormal = { 0, 1, 0 };
 	v3.Tangent = { 1, 0, 0 };
-	v3.TexCoord = { 1, 0 };
+	v3.TexCoord = { 0, 0 };
 
 	//Push all vertices into vector
 	vertices.push_back(v0);
@@ -236,7 +236,7 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	v20.Normal = { 0, 0, -1 };
 	v20.Binormal = { 0, 1, 0 };
 	v20.Tangent = { -1, 0, 0 };
-	v20.TexCoord = { 0, 0 };
+	v20.TexCoord = { 1, 1 };
 	//Bottom right
 	v21.Position = { 0.5, -0.5f, -1 };
 	v21.Normal = { 0, 0, -1 };
@@ -248,7 +248,7 @@ Cube::Cube(ID3D11Device* dxdevice, ID3D11DeviceContext* dxdevice_Context) : Mode
 	v22.Normal = { 0, 0, -1 };
 	v22.Binormal = { 0, 1, 0 };
 	v22.Tangent = { -1, 0, 0 };
-	v22.TexCoord = { 1, 1 };
+	v22.TexCoord = { 0, 0 };
 	//Top left
 	v23.Position = { -0.5, 0.5f, -1 };
 	v23.Normal = { 0, 0, -1 };

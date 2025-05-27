@@ -11,6 +11,5 @@ public:
 	virtual void Render() const;
 
 	~Cube() { };
-
 };
 

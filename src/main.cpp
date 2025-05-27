@@ -341,7 +341,7 @@ void InitRasterizerState()
 {
 	D3D11_RASTERIZER_DESC rasterizerState{};
 	rasterizerState.FillMode = D3D11_FILL_SOLID;
-	rasterizerState.CullMode = D3D11_CULL_BACK;
+	rasterizerState.CullMode = D3D11_CULL_NONE;
 	rasterizerState.FrontCounterClockwise = true;
 	rasterizerState.DepthBias = false;
 	rasterizerState.DepthBiasClamp = 0;

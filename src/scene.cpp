@@ -40,8 +40,8 @@ OurTestScene::OurTestScene(
 	{
 	   "assets/cubemaps/brightday/posx.png",
 	   "assets/cubemaps/brightday/negx.png",
-	   "assets/cubemaps/brightday/posy.png",
 	   "assets/cubemaps/brightday/negy.png",
+	   "assets/cubemaps/brightday/posy.png",
 	   "assets/cubemaps/brightday/posz.png",
 	   "assets/cubemaps/brightday/negz.png"
 	};
@@ -145,7 +145,7 @@ void OurTestScene::Update(
 		mat4f::rotation(0, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 		mat4f::scaling(3, 3, 3);
 
-	skyboxTransform = mat4f::translation((m_camera->m_position)) * mat4f::scaling(200.0f);
+	skyboxTransform = mat4f::translation((m_camera->m_position) - vec3f(0,0,-100)) * mat4f::scaling(200.0f);
 
 
 	//orbitingCubeTransform = m_cube_transform *
