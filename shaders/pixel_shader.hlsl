@@ -43,8 +43,8 @@ float4 PS_main(PSIn input) : SV_Target
     if (isSkybox == 1)
     {
         float3 viewDir = normalize(input.PosWorld.xyz - cameraPos.xyz);
-        float3 skyCOlor = Skybox.Sample(skyboxSampler, viewDir).rgb;
-        return float4(skyCOlor, 1.0f);
+        float3 skyColor = Skybox.Sample(skyboxSampler, viewDir).rgb;
+        return float4(skyColor, 1.0f);
 
     }
     

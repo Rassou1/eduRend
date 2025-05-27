@@ -57,7 +57,7 @@ OurTestScene::OurTestScene(
 		DebugBreak();
 	}
 	
-	unsigned cube_slot = 1;
+	unsigned cube_slot = 5;
 	dxdevice_context->PSSetShaderResources(
 		cube_slot,
 		1,
@@ -142,10 +142,11 @@ void OurTestScene::Update(
 		mat4f::scaling(0.05f);						 // The scene is quite large so scale it down to 5%
 
 	m_cube_transform = mat4f::translation(0, 0, 0) *			// No translation
-		mat4f::rotation(-m_angle, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
+		mat4f::rotation(0, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
 		mat4f::scaling(3, 3, 3);
 
 	skyboxTransform = mat4f::translation((m_camera->m_position)) * mat4f::scaling(200.0f);
+
 
 	//orbitingCubeTransform = m_cube_transform *
 	//	mat4f::translation(3, 0, 0) *			// No translation
@@ -164,7 +165,7 @@ void OurTestScene::Update(
 
 
 	// Increment the rotation angle.
-	//m_angle += m_angular_velocity * dt;
+	m_angle += m_angular_velocity * dt;
 
 	// Print fps
 	m_fps_cooldown -= dt;
@@ -188,8 +189,8 @@ void OurTestScene::Render()
 	// Obtain the matrices needed for rendering from the camera
 	m_view_matrix = m_camera->WorldToViewMatrix();
 	m_projection_matrix = m_camera->ProjectionMatrix();
-	m_dxdevice_context->PSSetSamplers(0, 1, &sampler);
-
+	
+	m_dxdevice_context->PSSetSamplers(2, 1, &skyboxSampler);
 	UpdateLightCamBuffer(vec4f(m_camera->m_position, 1.0f), 0, 1);
 	UpdateTransformationBuffer(skyboxTransform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(skybox->material, 1.0f);
@@ -198,8 +199,8 @@ void OurTestScene::Render()
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	//m_quad->Render();
-
-	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 0.0f), vec4f(m_camera->m_position, 1.0f), 0);
+	m_dxdevice_context->PSSetSamplers(0, 1, &sampler);
+	UpdateLightCamBuffer(vec4f(2.0f, 5.0f, 2.0f, 1.0f), vec4f(m_camera->m_position, 1.0f), 0);
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(m_cube->material, 1.0f);
 	m_cube->Render();

@@ -105,9 +105,11 @@ class OurTestScene : public Scene
 	mat4f orbitingCubeTransform2;
 
 	mat4f skyboxTransform;
+	mat4f lightTransform;
 
 	mat4f m_view_matrix;
 	mat4f m_projection_matrix;
+	
 
 	//Sampler state
 	ID3D11SamplerState* sampler;
