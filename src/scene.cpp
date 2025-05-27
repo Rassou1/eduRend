@@ -141,8 +141,11 @@ void OurTestScene::Render()
 	m_dxdevice_context->PSSetConstantBuffers(0, 1, &m_lightCam_buffer);
 	m_dxdevice_context->PSSetConstantBuffers(1, 1, &m_material_buffer);
 	// Obtain the matrices needed for rendering from the camera
+	
 	m_view_matrix = m_camera->WorldToViewMatrix();
 	m_projection_matrix = m_camera->ProjectionMatrix();
+	
+	UpdateLightCamBuffer(vec4f(0, 0, 5, 0), vec4f(m_camera->m_position, 0));
 
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
@@ -164,8 +167,6 @@ void OurTestScene::Render()
 	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
 	UpdateMaterialBuffer(m_sponza->material, 1.0f);
 	m_sponza->Render();
-
-	UpdateLightCamBuffer(vec4f(0, 0, 1, 0), vec4f(m_camera->m_position, 0));
 }
 
 void OurTestScene::Release()

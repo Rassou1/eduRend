@@ -53,7 +53,7 @@ float4 PS_main(PSIn input) : SV_Target
     float diff = max(dot(L, N), 0.0f);
     float3 diffuseTerm = diffuse.xyz * diff;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.xyz;
+    float3 specularTerm = specular.xyz * spec;
     
     float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
     return float4(finalColor, 1.0f);
