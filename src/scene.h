@@ -134,7 +134,7 @@ class OurTestScene : public Scene
 public:
 	/**
 	 * @brief Constructor
-	 * @param dxdevice Valid ID3D11Device.
+	 * @param dxdevice Valid ID3D1	1Device.
 	 * @param dxdevice_context Valid ID3D11DeviceContext.
 	 * @param window_width Current window width.
 	 * @param window_height Current window height.

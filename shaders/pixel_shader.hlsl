@@ -20,7 +20,7 @@ cbuffer MaterialBuffer : register(b1)
 
 struct PSIn
 {
-	float4 Pos  : SV_Position;
+	float4 Pos  : SV_Position;  
 	float3 Normal : NORMAL;
 	float2 TexCoord : TEX;
     float3 PosWorld : POSITION;
@@ -32,7 +32,7 @@ struct PSIn
 
 float4 PS_main(PSIn input) : SV_Target
 {
-    input.TexCoord *= 1.5;
+    //input.TexCoord *= 1.5;
     float4 textureColor = texDiffuse.Sample(texSampler, input.TexCoord);
    
     float3 N = normalize(input.Normal);
@@ -44,7 +44,7 @@ float4 PS_main(PSIn input) : SV_Target
     float diff = max(dot(L, N), 0.0f);
     float3 diffuseTerm = diffuse.xyz * diff;
     float spec = pow(max(dot(R, V), 0.0f), shininess);
-    float3 specularTerm = specular.xyz * spec * lightPos.w;
+    float3 specularTerm = specular.xyz * spec;
     
     float3 finalColor = ambientTerm + diffuseTerm + specularTerm;
     return float4(finalColor, 1.0f);

@@ -115,7 +115,7 @@ void OurTestScene::Update(
 	orbitingCubeTransform = m_cube_transform *
 		mat4f::translation(3, 0, 0) *			// No translation
 		mat4f::rotation(-m_angle * 2, 0.0f, 1.0f, 0.0f) *	// Rotate continuously around the y-axis
-		mat4f::scaling(1, 1, 1);
+		mat4f::scaling(3, 3, 3);
 
 	//orbitingCubeTransform2 = orbitingCubeTransform *
 	//	mat4f::translation(3, 0, 0) *
