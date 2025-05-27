@@ -145,22 +145,22 @@ void OurTestScene::Render()
 	m_view_matrix = m_camera->WorldToViewMatrix();
 	m_projection_matrix = m_camera->ProjectionMatrix();
 	
-	UpdateLightCamBuffer(vec4f(0, 0, 5, 0), vec4f(m_camera->m_position, 0));
+	UpdateLightCamBuffer(vec4f(0.0f, 0.0f, 5.0f, 0.0f), vec4f(m_camera->m_position, 0.0f));
 
 	// Load matrices + the Quad's transformation to the device and render it
 	//UpdateTransformationBuffer(m_quad_transform, m_view_matrix, m_projection_matrix);
 	//m_quad->Render();
 
 	UpdateTransformationBuffer(m_cube_transform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(m_cube->material, 1.0f);
+	UpdateMaterialBuffer(m_cube->material, 32.0f);
 	m_cube->Render();
 	
 	UpdateTransformationBuffer(orbitingCubeTransform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube->material, 1.0f);
+	UpdateMaterialBuffer(orbitingCube->material, 32.0f);
 	orbitingCube->Render();
 	
 	UpdateTransformationBuffer(orbitingCubeTransform2, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(orbitingCube2->material, 1.0f);
+	UpdateMaterialBuffer(orbitingCube2->material, 32.0f);
 	orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
