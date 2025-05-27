@@ -214,10 +214,10 @@ void OurTestScene::Render()
 	//orbitingCube2->Render();
 
 	// Load matrices + Sponza's transformation to the device and render it
-	UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
-	UpdateMaterialBuffer(m_sponza->material, 1.0f);
-	m_sponza->Render();
-
+	//UpdateTransformationBuffer(m_sponza_transform, m_view_matrix, m_projection_matrix);
+	//UpdateMaterialBuffer(m_sponza->material, 1.0f);
+	//m_sponza->Render();
+	
 }
 
 void OurTestScene::Release()
